@@ -52,7 +52,7 @@ class AddressBook:
             if contact.name == contact_name:
                 self.contacts.remove(contact)
                 print("You have deleted the contact!")
-                break
+                return
         
         print(f'There are no contacts to delete by the name {contact_name}')
 
@@ -165,24 +165,28 @@ def menu(agenda: AddressBook):
         print("5. Show all contacts")
         print("6. Exit")
 
-        option = int(input("Choose one option: "))
+        try:
 
-        match option:
-            case 1:
-                add_new_contact(agenda)
-            case 2:
-                delete_contact(agenda)
-            case 3:
-                update_contact(agenda)
-            case 4:
-                search_contact(agenda)
-            case 5:
-                agenda.show_all_contacts()
-            case 6:
-                print('Goodbye!')
-                break
-            case other:
-                print('That option does not exist')
+            option = int(input("Choose one option: "))
+
+            match option:
+                case 1:
+                    add_new_contact(agenda)
+                case 2:
+                    delete_contact(agenda)
+                case 3:
+                    update_contact(agenda)
+                case 4:
+                    search_contact(agenda)
+                case 5:
+                    agenda.show_all_contacts()
+                case 6:
+                    print('Goodbye!')
+                    break
+                case other:
+                    print('That option does not exist')
+        except ValueError:
+            print("The option must be an integer")
 
 def main():
     """Main function
