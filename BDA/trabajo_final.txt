@@ -1,0 +1,7 @@
+buscar datasets de algo, APIS, CSV, JSON, Red NAT en local, lo ideal sería sobre el mismo tema
+
+luego ETL
+y luego BD copo de nieve
+15 preguntas de negocio
+idea: covid como afecto por zona de pobreza
+rendimiento de estudiantes por transtornos mentales 
