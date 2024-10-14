@@ -3,6 +3,7 @@
 """# OXO con inteligencia fuerte"""
 
 import random
+import matplotlib.pyplot as plt
 
 # Inicializar el tablero
 board = [""] * 9
@@ -43,8 +44,10 @@ def check_winner(board, player):
 # Parámetro de exploración
 exploration_prob = 0.1
 
+episodes = []
+q_values = []
 # Ciclo principal del juego
-for _ in range(10000):
+for episode in range(100000):
     board = [""] * 9
     state = encode_state(board)
 
@@ -73,6 +76,24 @@ for _ in range(10000):
         if check_winner(board, "X"):
             break
         state = next_state
+
+        # Almacena los valores Q para una acción específica en  función de los episodios
+        if episode % 10 == 0:
+            action_to_track = 0  # Cambiar a la acción que deseas rastrear
+            episodes.append(episode)
+            q_values.append(q_table[state][action_to_track])
+
+
+# Graficar los valores Q en función de los episodios
+plt.plot(episodes, q_values)
+plt.title('Aprendizaje de la Acción Específica a lo largo de los Episodios')
+plt.xlabel('Episodio')
+plt.ylabel('Valor Q para la Acción Específica')
+plt.grid()
+plt.show()
+
+
+
 
 # Ahora, puedes utilizar la tabla Q entrenada para jugar contra la IA
 board = [ ""] * 9

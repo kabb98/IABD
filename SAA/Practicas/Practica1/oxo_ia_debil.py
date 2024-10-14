@@ -29,9 +29,11 @@ def ai_move(board):
         return None
 
 # Ciclo principal del juego
+movimientos = 0
 while not game_over:
     print_board(board)
     if player_turn:
+        movimientos += 1
         print("Tu turno (X)")
         move = input("Elige una casilla (0-8): ")
         if move.isdigit() and 0 <= int(move) < 9 and board[int(move)] == "":
@@ -45,7 +47,8 @@ while not game_over:
             player_turn = True
     if check_winner(board, "X"):
         print_board(board)
-        print("¡Ganaste!")
+        print(f"¡Ganaste en {movimientos} movimientos!")
+        
         game_over = True
     elif check_winner(board, "O"):
         print_board(board)

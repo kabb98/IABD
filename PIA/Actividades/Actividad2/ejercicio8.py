@@ -192,7 +192,12 @@ class Zoo:
     def __init__(self) -> None:
         """Constructor of the class Zoo, inicializate the list of the animals
         """
-        self.animals = []
+        self.habitats = []
+    
+    def add_habitat(self, name: str, max_capacity: int) -> None:
+        self.habitats.append(Habitat(name=name,
+                                     max_capacity=max_capacity))
+    
     
     def add_animal(self, animal_type: str, name: str, age: int) -> None:
         """Add a new animal to the list
