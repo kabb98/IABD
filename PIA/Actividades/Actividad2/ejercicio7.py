@@ -197,35 +197,32 @@ def add_animal(zoo: Zoo) -> None:
 
 
 def menu(zoo: Zoo) -> None:
-    """Menu function, allows to the user to do a few things
+    """Menu function, allows the user to do a few things
 
     Args:
         zoo (Zoo): The Zoo
     """
+    options = {
+        1: ("Add animal", lambda: add_animal(zoo)),
+        2: ("Show all animals", zoo.show_animals),
+        3: ("Make noises", zoo.make_noises),
+        4: ("Move all animals", zoo.move_animals),
+        5: ("Exit", lambda: print('Goodbye!'))
+    }
+    
     while True:
-        print("1. Add animal")
-        print("2. Show all animals")
-        print("3. Make noises")
-        print("4. Move all animals")
-        print("5. Exit")
+        for key, (description, _) in options.items():
+            print(f"{key}. {description}")
         
         try:
             option = int(input("Choose one option: "))
 
-            match option:
-                case 1:
-                    add_animal(zoo=zoo)
-                case 2:
-                    zoo.show_animals()
-                case 3:
-                    zoo.make_noises()
-                case 4:
-                    zoo.move_animals()
-                case 5:
-                    print('Goodbye!')
+            if option in options:
+                options[option][1]()
+                if option == 5:
                     break
-                case other:
-                    print('That option does not exist')
+            else:
+                print('That option does not exist')
         except ValueError:
             print("The option must be an integer")
 
@@ -235,6 +232,7 @@ def main():
     """
     zoo = Zoo()
     menu(zoo=zoo)
+
 
 if __name__ == "__main__":
     main()
