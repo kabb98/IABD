@@ -1,0 +1,1 @@
+aplicar modelos de IA a un dataset, y comparar los resultados obtenidos con diferentes modelos.
