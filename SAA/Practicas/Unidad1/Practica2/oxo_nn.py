@@ -38,7 +38,10 @@ def check_winner(board, player):
 # Ciclo principal del juego
 model = create_model()
 errors = []  # Lista para almacenar los errores en cada iteración
-for _ in range(10):
+accuracy = []  # Lista para almacenar la tasa de acierto en cada iteración
+max_games = 120
+current_game = 0
+for game in range(100):
     board = [""] * 9
     state = np.array([1 if cell == "X" else -1 if cell == "O" else 0 for cell in board])
     while True:
@@ -59,17 +62,32 @@ for _ in range(10):
             reward = 0  # Juego en curso
         target = model.predict(np.array([state]))[0]
         target[action] = reward
-        error = model.fit(np.array([state]), np.array([target]), epochs=10, verbose=0).history['loss'][0]
+        error = model.fit(np.array([state]), np.array([target]), epochs=2, verbose=0).history['loss'][0]
         errors.append(error)
+        accuracy.append(1.0 - error)
+        
+        current_game += 1
+        if current_game >= max_games:
+            break
+
         if check_winner(board, "X"):
             break
         state = next_state
+
+    
 
 # Generar la gráfica de evolución del error
 plt.plot(errors)
 plt.xlabel('Iteración')
 plt.ylabel('Error')
 plt.title('Evolución del error en el aprendizaje')
+plt.show()
+
+# Generar la gráfica de la tasa de acierto
+plt.plot(accuracy)
+plt.xlabel('Partidas')
+plt.ylabel('Tasa de acierto')
+plt.title('Evolución de la tasa de acierto')
 plt.show()
 
 # Ahora, puedes utilizar la red neuronal entrenada para jugar contra la IA

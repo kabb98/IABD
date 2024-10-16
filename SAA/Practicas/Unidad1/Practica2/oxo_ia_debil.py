@@ -1,6 +1,5 @@
 import random
 
-
 # Inicializar el tablero
 board = [""] * 9
 player_turn = True
