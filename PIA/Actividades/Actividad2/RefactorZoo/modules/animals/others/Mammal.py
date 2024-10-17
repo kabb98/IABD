@@ -1,4 +1,4 @@
-from modules.animals.animals import Animal
+from modules.animals.Animal import Animal
 
 class Mammal(Animal):
     def __init__(self, name: str, age: int) -> None:

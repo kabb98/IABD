@@ -1,4 +1,4 @@
-from modules.animals.animals import Animal
+from modules.animals.Animal import Animal
 from modules.animals.others import Flying
 
 class Bird(Animal, Flying):
