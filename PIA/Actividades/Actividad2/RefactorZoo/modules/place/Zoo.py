@@ -1,6 +1,7 @@
 from . import Habitat
 
-from ..animals.others import Mammal, Bird, Reptile, Duck
+from modules.animals.others import Mammal, Reptile
+from modules.animals.aves import Bird, Duck
 
 class Zoo:
     def __init__(self) -> None:

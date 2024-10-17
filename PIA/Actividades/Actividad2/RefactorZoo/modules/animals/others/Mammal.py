@@ -1,4 +1,5 @@
-from .. import Animal
+from modules.animals.animals import Animal
+
 class Mammal(Animal):
     def __init__(self, name: str, age: int) -> None:
         """Constructor of the Mammal class, calls the superclass constructor.

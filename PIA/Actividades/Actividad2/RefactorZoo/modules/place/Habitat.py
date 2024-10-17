@@ -1,5 +1,5 @@
 
-from modules.animals import Animal
+from modules.animals.animals import Animal
 
 class Habitat:
     def __init__(self, name: str, max_capacity: int) -> None:

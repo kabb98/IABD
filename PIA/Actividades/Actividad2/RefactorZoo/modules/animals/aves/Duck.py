@@ -1,4 +1,4 @@
-from .. import Animal
+from modules.animals.animals import Animal
 from ..others import Flying, Aquatic
 
 class Duck(Animal, Flying, Aquatic):

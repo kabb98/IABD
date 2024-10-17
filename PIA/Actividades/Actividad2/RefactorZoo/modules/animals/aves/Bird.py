@@ -1,5 +1,5 @@
-from .. import Animal
-from ..others import Flying
+from modules.animals.animals import Animal
+from modules.animals.others import Flying
 
 class Bird(Animal, Flying):
     def __init__(self, name: str, age: int) -> None:
