@@ -1,7 +1,7 @@
 from modules.animals.Animal import Animal
 from modules.animals.others import Flying
 
-class Bird(Animal, Flying):
+class Bird(Animal, Flying.Flying):
     def __init__(self, name: str, age: int) -> None:
         """Constructor of the Bird class, calls the superclass constructor.
 

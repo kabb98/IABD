@@ -1,4 +1,4 @@
-from place import Zoo
+from .place.Zoo import Zoo
 
 def add_new_habitat(zoo: Zoo):
     

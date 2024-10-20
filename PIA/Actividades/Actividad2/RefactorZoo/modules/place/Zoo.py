@@ -15,7 +15,7 @@ class Zoo:
             name (str): Name of the habitat.
             max_capacity (int): Maximum capacity of the habitat.
         """
-        nuevo = Habitat(name=name, max_capacity=max_capacity)
+        nuevo = Habitat.Habitat(name=name, max_capacity=max_capacity)
         self.habitats.append(nuevo)
     
     def add_animal_to_habitat(self, animal_type: str, name: str, age: int, habitat: int) -> None:
@@ -28,13 +28,13 @@ class Zoo:
             habitat (int): The habitat number to place the animal in.
         """
         if  animal_type.lower() == 'mammal':
-            animal = Mammal(name=name, age=age)
+            animal = Mammal.Mammal(name=name, age=age)
         elif animal_type.lower() == 'bird':
-            animal = Bird(name=name, age=age)
+            animal = Bird.Bird(name=name, age=age)
         elif animal_type.lower() == 'reptile':
-            animal = Reptile(name=name, age=age)
+            animal = Reptile.Reptile(name=name, age=age)
         elif animal_type.lower() == 'duck':
-            animal = Duck(name=name, age=age)
+            animal = Duck.Duck(name=name, age=age)
         else:
             print("That type doesn't exist")
             return
