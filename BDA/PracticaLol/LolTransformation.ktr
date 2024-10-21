@@ -472,18 +472,33 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Filter rows 2</from>
-      <to>Merge join</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Calcular Bajas</from>
-      <to>Unique rows</to>
+      <to>Quitar repetidas</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Unique rows</from>
-      <to>Merge join</to>
+      <from>Quitar repetidas</from>
+      <to>Quitar Campos y Cambio Formato Numero</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Quitar Campos y Cambio Formato Numero</from>
+      <to>Juntar los dos ficheros</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows 2</from>
+      <to>Juntar los dos ficheros</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Juntar los dos ficheros</from>
+      <to>Quitar columnas duplicadas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Quitar columnas duplicadas</from>
+      <to>Sacar flujos</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -704,7 +719,7 @@ if (Assist_4 != null)
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Merge join</send_true_to>
+    <send_true_to>Juntar los dos ficheros</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
@@ -774,7 +789,7 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
+      <xloc>704</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1007,7 +1022,7 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
+      <xloc>560</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1123,49 +1138,13 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
+      <xloc>432</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>INNER</join_type>
-    <step1>Unique rows</step1>
-    <step2>Filter rows 2</step2>
-    <keys_1>
-      <key>Address</key>
-      <key>Team</key>
-    </keys_1>
-    <keys_2>
-      <key>Address</key>
-      <key>Team</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1216</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Unique rows</name>
+    <name>Quitar repetidas</name>
     <type>Unique</type>
     <description/>
     <distribute>Y</distribute>
@@ -1200,6 +1179,180 @@ if (Assist_4 != null)
     <GUI>
       <xloc>1024</xloc>
       <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Quitar Campos y Cambio Formato Numero</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>Assist_1</name>
+      </remove>
+      <remove>
+        <name>Assist_2</name>
+      </remove>
+      <remove>
+        <name>Assist_3</name>
+      </remove>
+      <remove>
+        <name>Assist_4</name>
+      </remove>
+      <remove>
+        <name>Asistencias</name>
+      </remove>
+      <meta>
+        <name>Bajas</name>
+        <rename>Bajas</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>#</conversion_mask>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Juntar los dos ficheros</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>Quitar Campos y Cambio Formato Numero</step1>
+    <step2>Filter rows 2</step2>
+    <keys_1>
+      <key>Address</key>
+      <key>Team</key>
+    </keys_1>
+    <keys_2>
+      <key>Address</key>
+      <key>Team</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Quitar columnas duplicadas</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>Address_1</name>
+      </remove>
+      <remove>
+        <name>Team_1</name>
+      </remove>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sacar flujos</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Table output</send_true_to>
+    <send_false_to>Merge join</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>Team</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>blue</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1040</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
