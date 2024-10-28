@@ -438,7 +438,7 @@
   <order>
     <hop>
       <from>Bans CSV</from>
-      <to>Sort rows 2</to>
+      <to>Ordena por address y team</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -448,27 +448,27 @@
     </hop>
     <hop>
       <from>KillsCSV</from>
-      <to>Ordenar Filas</to>
+      <to>Ordenar Filas address y team</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Ordenar Filas</from>
-      <to>Obtener el hash</to>
+      <from>Ordenar Filas address y team</from>
+      <to>Obtener el hash y Renombrar</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Obtener el hash</from>
+      <from>Obtener el hash y Renombrar</from>
       <to>Calcular Asistencias</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Sort rows 2</from>
-      <to>Obtener el hash 2</to>
+      <from>Ordena por address y team</from>
+      <to>Obtener el hash y Cambiar Nombre del team</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Obtener el hash 2</from>
-      <to>Filter rows 2</to>
+      <from>Obtener el hash y Cambiar Nombre del team</from>
+      <to>Solo bans con 3 columnas</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -487,7 +487,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Filter rows 2</from>
+      <from>Solo bans con 3 columnas</from>
       <to>Juntar los dos ficheros</to>
       <enabled>Y</enabled>
     </hop>
@@ -608,7 +608,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>288</xloc>
+      <xloc>160</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -796,92 +796,6 @@ if (Assist_4 != null)
     </GUI>
   </step>
   <step>
-    <name>Filter rows 2</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Juntar los dos ficheros</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>Y</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>ban_3</leftvalue>
-            <function>=</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text/>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>Y</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>Y</negated>
-            <operator>AND</operator>
-            <conditions>
-              <condition>
-                <negated>N</negated>
-                <leftvalue>ban_2</leftvalue>
-                <function>=</function>
-                <rightvalue/>
-                <value>
-                  <name>constant</name>
-                  <type>String</type>
-                  <text/>
-                  <length>-1</length>
-                  <precision>-1</precision>
-                  <isnull>Y</isnull>
-                  <mask/>
-                </value>
-              </condition>
-              <condition>
-                <negated>Y</negated>
-                <operator>AND</operator>
-                <leftvalue>ban_1</leftvalue>
-                <function>=</function>
-                <rightvalue/>
-                <value>
-                  <name>constant</name>
-                  <type>String</type>
-                  <text/>
-                  <length>-1</length>
-                  <precision>-1</precision>
-                  <isnull>Y</isnull>
-                  <mask/>
-                </value>
-              </condition>
-            </conditions>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>704</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Juntar los dos ficheros</name>
     <type>MergeJoin</type>
     <description/>
@@ -894,7 +808,7 @@ if (Assist_4 != null)
     </partitioning>
     <join_type>INNER</join_type>
     <step1>Quitar Campos y Cambio Formato Numero</step1>
-    <step2>Filter rows 2</step2>
+    <step2>Solo bans con 3 columnas</step2>
     <keys_1>
       <key>Address</key>
       <key>Team</key>
@@ -912,7 +826,7 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1248</xloc>
+      <xloc>1280</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1019,76 +933,13 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>288</xloc>
+      <xloc>176</xloc>
       <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Obtener el hash</name>
-    <type>ReplaceString</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <in_stream_name>Address</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^(.*?=)</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>Team</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^.*bKills.*$</replace_string>
-        <replace_by_string>blue</replace_by_string>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>Team</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^.*rKills.*$</replace_string>
-        <replace_by_string>red</replace_by_string>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>560</xloc>
-      <yloc>160</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Obtener el hash 2</name>
+    <name>Obtener el hash y Cambiar Nombre del team</name>
     <type>ReplaceString</type>
     <description/>
     <distribute>Y</distribute>
@@ -1146,7 +997,70 @@ if (Assist_4 != null)
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>320</yloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Obtener el hash y Renombrar</name>
+    <type>ReplaceString</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>Address</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^(.*?=)</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>Team</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^.*bKills.*$</replace_string>
+        <replace_by_string>blue</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>Team</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^.*rKills.*$</replace_string>
+        <replace_by_string>red</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1185,7 +1099,7 @@ if (Assist_4 != null)
     </GUI>
   </step>
   <step>
-    <name>Ordenar Filas</name>
+    <name>Ordena por address y team</name>
     <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -1211,6 +1125,14 @@ if (Assist_4 != null)
         <collator_strength>0</collator_strength>
         <presorted>N</presorted>
       </field>
+      <field>
+        <name>Team</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1221,7 +1143,57 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
+      <xloc>352</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar Filas address y team</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Address</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>Team</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
       <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1318,7 +1290,7 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1248</xloc>
+      <xloc>1280</xloc>
       <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1352,7 +1324,7 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1248</xloc>
+      <xloc>1280</xloc>
       <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1397,8 +1369,8 @@ if (Assist_4 != null)
     </GUI>
   </step>
   <step>
-    <name>Sort rows 2</name>
-    <type>SortRows</type>
+    <name>Solo bans con 3 columnas</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1407,55 +1379,67 @@ if (Assist_4 != null)
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>Address</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>Team</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ban_1</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ban_2</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ban_3</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
+    <send_true_to>Juntar los dos ficheros</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>ban_3</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text/>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>Y</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>Y</negated>
+            <operator>AND</operator>
+            <conditions>
+              <condition>
+                <negated>N</negated>
+                <leftvalue>ban_2</leftvalue>
+                <function>=</function>
+                <rightvalue/>
+                <value>
+                  <name>constant</name>
+                  <type>String</type>
+                  <text/>
+                  <length>-1</length>
+                  <precision>-1</precision>
+                  <isnull>Y</isnull>
+                  <mask/>
+                </value>
+              </condition>
+              <condition>
+                <negated>Y</negated>
+                <operator>AND</operator>
+                <leftvalue>ban_1</leftvalue>
+                <function>=</function>
+                <rightvalue/>
+                <value>
+                  <name>constant</name>
+                  <type>String</type>
+                  <text/>
+                  <length>-1</length>
+                  <precision>-1</precision>
+                  <isnull>Y</isnull>
+                  <mask/>
+                </value>
+              </condition>
+            </conditions>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1465,7 +1449,7 @@ if (Assist_4 != null)
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
+      <xloc>752</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
