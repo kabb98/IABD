@@ -1,0 +1,88 @@
+Plantear 3 esquemas conceptuales:
+- Esquema 1:
+    Deseos del cliente
+    Hay que ver los atributos de la tabla de hechos
+
+- Esquema 2:
+
+- Esquema 3:
+
+
+
+Esquema Conceptual:
+Primera aproximación a lo que se quiere hacer.
+    1. Detectar hechos y dimensiones
+    2. 
+
+
+
+Esquema Físico:
+Esquema concreto para una base de datos concreta
+
+
+
+
+
+ESQUEMA CONCEPTUAL:
+Elementos que se pueden medir
+- Retraso acumulado
+- Precio base
+- Asientos disponibles
+- Puntos gastados
+- Puntos acumulados
+
+TABLA DE HECHOS -> Trayecto:
+- Puntos -> Esto da problemas, habría que poner dos atributos más: Puntos gastados y Puntos acumulados
+    - Puntos gastados
+    - Puntos acumulados
+- Retraso
+- Precio
+- Asientos turista
+- Asientos business
+- Asientos primera
+    - LINKADOS:
+        - Cod Avion viene de AVION
+        - Cod Pasajero viene de PASAJERO
+        - Cod Origen viene de AEROPUERTO
+        - Cod Destino viene de AEROPUERTO
+        - Cod Fecha salida viene de FECHA
+        - Cod Fecha llegada viene de FECHA
+        - Cod Tiempo salida viene de TIEMPO
+        - Cod Tiempo llegada viene de TIEMPO
+
+
+DIMENSIONES:
+- AVION:
+    - Cod Avion
+    - Tipo
+    - Capacidad turista
+    - Capacidad business
+    - Capacidad primera
+
+- PASAJERO:
+    - Cod Pasajero
+    - Sexo
+    - Estado Civil
+    - Fecha Nac
+    - Tipo pasajero frecuente
+    - Sueldo
+    - Código Postal -> Jerarquía con Ciudad y estado
+    - Categoría
+
+AEROPUERTO:
+    - Cod Aeropuerto
+    - Tipo
+    - Tipo Radar
+    - Nombre
+    - Ciudad -> Estado (Jerarquía) 
+
+TIEMPO:
+    - Cod Tiempo
+    - Tiempo (min por ejemplo)
+FECHA
+    - Cod Fecha
+    - Fecha (dia del mes año)
+ITINERARIO
+    - Fecha Reserva
+    - Cod Reserva
+    - Tipo Pago 

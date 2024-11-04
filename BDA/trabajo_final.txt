@@ -5,3 +5,9 @@ y luego BD copo de nieve
 15 preguntas de negocio
 idea: covid como afecto por zona de pobreza
 rendimiento de estudiantes por transtornos mentales 
+
+
+
+Para el dia 21 de noviembre, explicar el proyecto
+Fuentes de datos
+Tablas de hechos

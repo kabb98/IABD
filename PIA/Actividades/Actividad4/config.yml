@@ -1,0 +1,11 @@
+# config.yml
+paths:
+  data_dir: "./data"            # Carpeta donde se encuentran los datos de entrada
+  output_dir: "./output"        # Carpeta donde se guardarán los datos procesados
+  database_file: "./output/database.sqlite"  # Ruta de la base de datos SQLite
+
+files:
+  renewable_energy: "energia_renovable.xlsx"   # Nombre del archivo de Energía Renovable
+  population: "poblacion_mundial.csv"         # Nombre del archivo de Población Mundial
+  emissions: "emisiones_ghg.csv"              # Nombre del archivo de Emisiones GHG
+  gdp: "pib_mundial.csv"                      # Nombre del archivo de PIB
