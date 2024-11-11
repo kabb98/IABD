@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 import pandas as pd
 
+from .parsers import Parser
+
+
 class Extractor(ABC):
     @abstractmethod
     def extract(self, data):
