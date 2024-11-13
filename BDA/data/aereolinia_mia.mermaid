@@ -1,0 +1,80 @@
+erDiagram
+    Avion {
+        int cod_avion PK
+        string tipo
+        int capacidad_turista
+        int capacidad_primera
+        int capacidad_business
+    }
+
+    Itinerario {
+        int cod_reserva PK
+        string tipo_pago
+        date fecha_reserva
+    }
+
+    Trayecto {
+        int puntos
+        int retraso
+        float precio
+        int puntos_gastados
+        int puntos_acumulados
+        int asientos_turista
+        int asientos_primera
+        int asientos_business
+        int cod_avion FK
+        int cod_pasajero FK
+        int cod_fecha_salida FK
+        int cod_fecha_llegada FK
+        int cod_itinerario FK
+        int cod_tiempo_salida FK
+        int cod_tiempo_llegada FK
+        int cod_aeropuerto_salida FK
+        int cod_aeropuerto_llegada FK
+    }
+
+    Pasajero {
+        int cod_pasajero PK
+        string sexo
+        string estado_civil
+        date fecha_nacimiento
+        string tipo
+        string codigo_postal
+        string categoria
+    }
+
+    Aeropuerto {
+        int cod_aeropuerto PK
+        string tipo_radar
+        string nombre
+        string ciudad FK
+    }
+
+    Ciudad {
+        string ciudad PK
+        string estado FK
+    }
+
+    Estado {
+        string estado PK
+    }
+
+    Fecha {
+        int cod_fecha PK
+        date fecha
+    }
+
+    Tiempo {
+        int cod_tiempo PK
+        time tiempo
+    }
+
+    Trayecto ||--|| Avion : "FK-cod_avion"
+    Trayecto ||--|| Pasajero : "FK-cod_pasajero"
+    Trayecto ||--|| Fecha : "FK-cod_fecha_salida, cod_fecha_llegada"
+    Trayecto ||--|| Itinerario : "FK-cod_itinerario"
+    Trayecto ||--|| Tiempo : "FK-cod_tiempo_salida, cod_tiempo_llegada"
+    Trayecto ||--|| Aeropuerto : "FK-cod_aeropuerto_salida, cod_aeropuerto_llegada"
+    Pasajero ||--|| Ciudad : "FK-ciudad"
+    Ciudad ||--|| Estado : "FK-estado"
+    Aeropuerto||--|| Ciudad : "FK-ciudad"
