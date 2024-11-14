@@ -1,0 +1,102 @@
+erDiagram
+    Vuelo {
+        int cod_vuelo PK
+        datetime hora_salida_programada
+        datetime hora_llegada_programada
+        string tipo_avion
+        int capacidad_turista
+        int capacidad_primera
+        int capacidad_business
+    }
+
+    Itinerario {
+        int cod_reserva PK
+        string tipo_pago
+        date fecha_reserva
+    }
+
+    FrequentFlyer {
+        int cod_frecuente_vuelo PK
+        int cod_cliente FK
+        int cod_origen FK
+        int cod_destino FK
+        int cod_origen_viaje FK
+        int cod_destino_viaje FK
+        int cod_clase_tarifa FK
+        int cod_canal FK
+        float tarifa
+        float millas
+        int minutos_retraso
+        int numero_boleto
+        int puntos
+        float precio
+        int puntos_gastados
+        int puntos_acumulados
+        int asientos_turista
+        int asientos_primera
+        int asientos_business
+        int cod_avion FK
+        int cod_fecha_salida FK
+        int cod_fecha_llegada FK
+        int cod_tiempo_salida FK
+        int cod_tiempo_llegada FK
+    }
+
+    Cliente {
+        int cod_cliente PK
+        string nombre_cliente
+        string direccion_cliente
+        string ciudad_cliente
+        string estado_cliente
+        string codigo_postal_cliente
+        string tipo_cliente
+        float ingreso_cliente
+        date fecha_nacimiento_cliente
+        string estado_civil_cliente
+        string sexo_cliente
+    }
+
+    Aeropuerto {
+        int cod_aeropuerto PK
+        string nombre_aeropuerto
+        string ciudad_aeropuerto
+        string tipo_aeropuerto
+        string tipo_radar
+    }
+
+    Ubicacion {
+        string ciudad PK
+        string estado
+    }
+
+    Canal {
+        int cod_canal PK
+        string nombre_canal
+    }
+
+    ClaseTarifa {
+        int cod_clase_tarifa PK
+        string codigo_clase_tarifa
+        string descripcion_clase_tarifa
+        string tipo_restriccion
+    }
+
+    Fecha {
+        int cod_fecha PK
+        date fecha
+    }
+
+    Tiempo {
+        int cod_tiempo PK
+        time tiempo
+    }
+
+    FrequentFlyer ||--|| Cliente : "FK-cod_cliente"
+    FrequentFlyer ||--|| Aeropuerto : "FK-cod_origen, cod_destino, cod_origen_viaje, cod_destino_viaje"
+    FrequentFlyer ||--|| Ubicacion : "FK-ciudad"
+    FrequentFlyer ||--|| Canal : "FK-cod_canal"
+    FrequentFlyer ||--|| ClaseTarifa : "FK-cod_clase_tarifa"
+    FrequentFlyer ||--|| Vuelo : "FK-cod_vuelo"
+    FrequentFlyer ||--|| Itinerario : "FK-cod_reserva"
+    FrequentFlyer ||--|| Fecha : "FK-cod_fecha_salida, cod_fecha_llegada"
+    FrequentFlyer ||--|| Tiempo : "FK-cod_tiempo_salida, cod_tiempo_llegada"
