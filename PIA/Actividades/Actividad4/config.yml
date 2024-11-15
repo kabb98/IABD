@@ -3,6 +3,7 @@ paths:
   data_dir: "./data"
   output_dir: "./output"
   database_file: "./output/database.sqlite"
+  merged_file: "./output/merged.csv"
 
 files:
   energy: "energy.csv"

@@ -1,6 +1,0 @@
-name: actividad1_env
-channels:
-  - defaults
-dependencies:
-  - python
-prefix: C:\Users\kenny\anaconda3\envs\actividad1_env

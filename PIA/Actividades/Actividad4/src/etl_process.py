@@ -3,7 +3,7 @@
 import pandas as pd
 import sys
 from pathlib import Path
-
+import sqlite3
 import parsers, extract, transform
 
 # Añadir el directorio raíz del proyecto al sys.path
@@ -13,8 +13,12 @@ def main():
     # Paths
     paths = parsers.Parser.parse(Path('./config.yml'))
 
+    # Comprobar que exista la salida
+    Path('./output').mkdir(parents=True, exist_ok=True)
+
     data_files_paths = paths['files']
     data_root_path = paths['paths']['data_dir']
+    database_file = paths['paths']['database_file']
 
     energy_path = Path(data_root_path) / data_files_paths['energy']
     pib_path = Path(data_root_path) / data_files_paths['pib']
@@ -36,8 +40,9 @@ def main():
     # Merge data
     merged_df = pd.merge(merged_df, emissions_df, on='Country', how='inner')
 
-    print(merged_df.head())
-
+    # Guardar en SQLite
+    with sqlite3.connect(Path(database_file)) as dbcon:
+        merged_df.to_sql(name='etl', con=dbcon, if_exists='replace', index=False)
 
 if __name__ == '__main__':
     main()
