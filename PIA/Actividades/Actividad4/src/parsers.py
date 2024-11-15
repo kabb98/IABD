@@ -4,7 +4,7 @@ import yaml
 class Parser:
 
     def __init__(self) -> None:
-        Path('../output').mkdir(parents=True, exist_ok=True)
+        Path('./output').mkdir(parents=True, exist_ok=True)
     
     @staticmethod
     def parse(path: Path):
