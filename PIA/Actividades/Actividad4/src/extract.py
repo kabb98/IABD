@@ -13,15 +13,15 @@ class Extractor(ABC):
 
 class ExtractorCSV(Extractor):
     @staticmethod
-    def extract(self, path: Path):
+    def extract(path: Path, rows = 0):
         """
         Returns a pandas DataFrame from a CSV file
         """
-        return pd.read_csv(path)
+        return pd.read_csv(path, skiprows=rows)
 
 class ExtractorExcel(Extractor):
     @staticmethod
-    def extract(self, path: Path, sheet_name: str):
+    def extract(path: Path, sheet_name: str):
         """
         Returns a pandas DataFrame from a Excel file
         """
@@ -29,7 +29,7 @@ class ExtractorExcel(Extractor):
 
 class ExtractorSQLite(Extractor):
     @staticmethod
-    def extract(self, path: Path):
+    def extract(path: Path):
         """
         Returns a pandas DataFrame from a SQLite file
         """

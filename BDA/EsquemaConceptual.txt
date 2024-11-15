@@ -85,4 +85,7 @@ FECHA
 ITINERARIO
     - Fecha Reserva
     - Cod Reserva
-    - Tipo Pago 
+    - Tipo Pago
+
+Si solo tenemos un campo (PK y otra cosa) no hace falta ponerlo en una dimensión, se puede poner en la tabla de hechos directamente.
+Por ejemplo, la dimensión FECHA. O la dimensión TIEMPO.
