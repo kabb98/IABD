@@ -4,10 +4,7 @@ from pathlib import Path
 from src.extract import ExtractorCSV, ExtractorExcel, ExtractorSQLite
 from src.transform import TransformEnergy, TransformPib
 
-pib_data = ExtractorExcel.extract(Path('data/pib.xlsx'), sheet_name='Full data')
+emissions_data = ExtractorCSV.extract(Path('./data/emissions.csv'))
 
-# print(pib_data.head())
-
-pib_data = TransformPib.transform(pib_data)
-
-print(pib_data.head(n=50))
+df = TransformEnergy.transform(emissions_data)
+df.head()
