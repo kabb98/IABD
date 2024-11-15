@@ -18,7 +18,7 @@ class TransformEnergy:
         # Average energy
         years = [str(year) for year in range(1990, 2015)]
 
-        df["Average Electricity"] = df[years].mean(axis=1)
+        df["average_electricity"] = df[years].mean(axis=1)
 
         # Eliminar las columnas de los años
         df = df.drop(columns=years)
@@ -67,6 +67,6 @@ class TransformEmissions:
         df = df.groupby("Country")["value"].mean().reset_index()
 
         # Renombrar la columna de emisiones promedio
-        df.rename(columns={"value": "Average Emissions"}, inplace=True)
+        df.rename(columns={"value": "average_emissions"}, inplace=True)
         
         return df

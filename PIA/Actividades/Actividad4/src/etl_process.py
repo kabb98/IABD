@@ -33,6 +33,9 @@ def main():
     # Merge data
     merged_df = pd.merge(energy_df, pib_df, on='Country', how='inner')
 
+    # Merge data
+    merged_df = pd.merge(merged_df, emissions_df, on='Country', how='inner')
+
     print(merged_df.head())
 
 
