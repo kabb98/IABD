@@ -28,6 +28,8 @@ services:
       # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid" 
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+    # volumes:
+    #   - /home/sergi/kafka_data:/var/lib/kafka/data
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.7.1
@@ -43,7 +45,9 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
   connect:
-    image: cnfldemos/cp-server-connect-datagen:0.6.4-7.6.0
+    build:
+      context: ./dockerfiles/kafka-connect
+      dockerfile: Dockerfile
     hostname: connect
     container_name: connect
     depends_on:
@@ -165,3 +169,32 @@ services:
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+
+# volumes:
+#   kafka_data:
+#     driver: local
+  hadoop:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop
+    ports:
+      - "9870:9870"  # Web UI de HDFS
+      - "9000:9000"  # Puerto para acceso a HDFS
+    environment:
+      - CLUSTER_NAME=test
+    volumes:
+      - hadoop_data:/hadoop/dfs/name
+
+  hadoop-datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-datanode
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://hadoop:9000
+      - CLUSTER_NAME=test
+    depends_on:
+      - hadoop
+    volumes:
+      - hadoop_data:/hadoop/dfs/data
+
+volumes:
+  hadoop_data:
+    driver: local
