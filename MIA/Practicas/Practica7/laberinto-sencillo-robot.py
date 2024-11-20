@@ -3,153 +3,209 @@ import numpy as np
 import random
 from sklearn.neural_network import MLPClassifier
 
-# Copy the previous functions from the original code
-def entrenar_modelo_nuevo_sklearn():
-    inputs = np.array([
-        [0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0],
-        [1, 1, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]
-    ])
-    outputs = np.array([
-        [0, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0],
-        [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 0]
-    ])
-    model = MLPClassifier(hidden_layer_sizes=(16, 12), activation='relu', max_iter=500, random_state=42)
-    model.fit(inputs, np.argmax(outputs, axis=1))
-    return model
+class MazeRobotSimulation:
+    def __init__(self, size=7):
+        pygame.init()
+        
+        # Screen setup
+        self.size = size
+        self.cell_size = 70
+        self.screen_width = size * self.cell_size
+        self.screen_height = size * self.cell_size + 80
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        pygame.display.set_caption("Maze Robot Navigation")
 
-def crear_laberinto_con_camino(tamaño=10):
-    laberinto = np.ones((tamaño, tamaño))
-    camino = [(0, 0)]
-    laberinto[0, 0] = 0
-    x, y = 0, 0
-    while (x, y) != (tamaño - 1, tamaño - 1):
-        if random.random() < 0.5 and y < tamaño - 1:
-            y += 1
-        elif x < tamaño - 1:
-            x += 1
-        laberinto[x, y] = 0
-        camino.append((x, y))
-    for i in range(tamaño):
-        for j in range(tamaño):
-            if (i, j) not in camino and random.random() < 0.3:
-                laberinto[i][j] = 1
-    return laberinto
+        # Colors
+        self.COLORS = {
+            'BACKGROUND': (240, 248, 255),  # Light blue
+            'WALL': (70, 70, 90),           # Dark grayish blue
+            'PATH': (230, 230, 250),        # Lavender
+            'ROBOT': (255, 69, 0),          # Red-orange
+            'GOAL': (50, 205, 50),          # Lime green
+            'BUTTON': (100, 149, 237),      # Cornflower blue
+            'TEXT': (255, 255, 255),        # White
+            'OUTLINE': (119, 136, 153)      # Slate gray
+        }
 
-def obtener_sensores(laberinto, posicion, direccion):
-    tamaño = laberinto.shape[0]
-    sensores = [0, 0, 0]
-    movimientos = {
-        "N": [(-1, 0), (0, -1), (0, 1)],
-        "S": [(1, 0), (0, 1), (0, -1)],
-        "E": [(0, 1), (-1, 0), (1, 0)],
-        "W": [(0, -1), (1, 0), (-1, 0)]
-    }
-    for idx, (di, dj) in enumerate(movimientos[direccion]):
-        ni, nj = posicion[0] + di, posicion[1] + dj
-        if not (0 <= ni < tamaño and 0 <= nj < tamaño) or laberinto[ni][nj] == 1:
-            sensores[idx] = 1
-    return sensores
+        # Fonts
+        pygame.font.init()
+        self.font = pygame.font.Font(None, 36)
+        
+        # Game elements
+        self.maze = self.create_maze()
+        self.robot_pos = (0, 0)
+        self.robot_dir = "E"
+        self.goal = (size - 1, size - 1)
+        self.model = self.train_neural_network()
+        
+        # Button
+        self.button_rect = pygame.Rect(
+            self.screen_width // 2 - 100, 
+            self.screen_height - 60, 
+            200, 
+            40
+        )
+        
+        # Game state
+        self.steps = 0
+        self.max_steps = 100
 
-def mover_robot(posicion, direccion, accion, laberinto):
-    movimientos = {"N": (-1, 0), "S": (1, 0), "E": (0, 1), "W": (0, -1)}
-    direcciones = ["N", "E", "S", "W"]
-    if accion == "avanzar":
-        nueva_posicion = (posicion[0] + movimientos[direccion][0], posicion[1] + movimientos[direccion][1])
-    elif accion == "girar_derecha":
-        nueva_direccion = direcciones[(direcciones.index(direccion) + 1) % 4]
-        return posicion, nueva_direccion
-    elif accion == "girar_izquierda":
-        nueva_direccion = direcciones[(direcciones.index(direccion) - 1) % 4]
-        return posicion, nueva_direccion
-    else:
-        nueva_posicion = posicion
-    if 0 <= nueva_posicion[0] < laberinto.shape[0] and 0 <= nueva_posicion[1] < laberinto.shape[1] and laberinto[nueva_posicion] == 0:
-        return nueva_posicion, direccion
-    return posicion, direccion
+    def create_maze(self):
+        maze = np.ones((self.size, self.size))
+        path = [(0, 0)]
+        maze[0, 0] = 0
+        x, y = 0, 0
+        
+        while (x, y) != (self.size - 1, self.size - 1):
+            if random.random() < 0.5 and y < self.size - 1:
+                y += 1
+            elif x < self.size - 1:
+                x += 1
+            maze[x, y] = 0
+            path.append((x, y))
+        
+        for i in range(self.size):
+            for j in range(self.size):
+                if (i, j) not in path and random.random() < 0.3:
+                    maze[i][j] = 1
+        return maze
 
-# Pygame visualization
-def simular_laberinto_pygame():
-    pygame.init()
-    
-    # Maze parameters
-    tamaño = 10
-    cell_size = 60
-    screen_width = tamaño * cell_size
-    screen_height = tamaño * cell_size + 50  # Extra space for button
-    screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption("Maze Robot Simulation")
+    def train_neural_network(self):
+        inputs = np.array([
+            [0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0],
+            [1, 1, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]
+        ])
+        outputs = np.array([
+            [0, 0, 1], [0, 0, 1], [0, 0, 1], [1, 0, 0],
+            [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 0]
+        ])
+        model = MLPClassifier(hidden_layer_sizes=(16, 12), activation='relu', max_iter=500, random_state=42)
+        model.fit(inputs, np.argmax(outputs, axis=1))
+        return model
 
-    # Colors
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
+    def get_sensors(self):
+        movimientos = {
+            "N": [(-1, 0), (0, -1), (0, 1)],
+            "S": [(1, 0), (0, 1), (0, -1)],
+            "E": [(0, 1), (-1, 0), (1, 0)],
+            "W": [(0, -1), (1, 0), (-1, 0)]
+        }
+        sensores = [0, 0, 0]
+        for idx, (di, dj) in enumerate(movimientos[self.robot_dir]):
+            ni, nj = self.robot_pos[0] + di, self.robot_pos[1] + dj
+            if (not (0 <= ni < self.size and 0 <= nj < self.size)) or self.maze[ni][nj] == 1:
+                sensores[idx] = 1
+        return sensores
 
-    # Create maze and robot
-    laberinto = crear_laberinto_con_camino(tamaño)
-    posicion = (0, 0)
-    direccion = "E"
-    objetivo = (tamaño - 1, tamaño - 1)
-    model = entrenar_modelo_nuevo_sklearn()
+    def move_robot(self, action):
+        movimientos = {"N": (-1, 0), "S": (1, 0), "E": (0, 1), "W": (0, -1)}
+        direcciones = ["N", "E", "S", "W"]
+        
+        if action == "avanzar":
+            nueva_pos = (
+                self.robot_pos[0] + movimientos[self.robot_dir][0], 
+                self.robot_pos[1] + movimientos[self.robot_dir][1]
+            )
+        elif action == "girar_derecha":
+            nueva_dir = direcciones[(direcciones.index(self.robot_dir) + 1) % 4]
+            return self.robot_pos, nueva_dir
+        elif action == "girar_izquierda":
+            nueva_dir = direcciones[(direcciones.index(self.robot_dir) - 1) % 4]
+            return self.robot_pos, nueva_dir
+        else:
+            nueva_pos = self.robot_pos
+        
+        if (0 <= nueva_pos[0] < self.size and 
+            0 <= nueva_pos[1] < self.size and 
+            self.maze[nueva_pos] == 0):
+            return nueva_pos, self.robot_dir
+        return self.robot_pos, self.robot_dir
 
-    # Fonts
-    font = pygame.font.Font(None, 36)
-    
-    # Next step button
-    button_rect = pygame.Rect(10, screen_height - 40, 100, 30)
-    
-    # Game loop control
-    running = True
-    pasos = 0
-    max_pasos = 100
-
-    while running and posicion != objetivo and pasos < max_pasos:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if button_rect.collidepoint(event.pos):
-                    # Perform robot movement on button click
-                    sensores = obtener_sensores(laberinto, posicion, direccion)
-                    accion_idx = model.predict([sensores])[0]
-                    accion = ["girar_derecha", "girar_izquierda", "avanzar"][accion_idx]
-                    
-                    nueva_posicion, nueva_direccion = mover_robot(posicion, direccion, accion, laberinto)
-                    posicion, direccion = nueva_posicion, nueva_direccion
-                    
-                    pasos += 1
-
-        # Drawing
-        screen.fill(WHITE)
+    def draw(self):
+        self.screen.fill(self.COLORS['BACKGROUND'])
         
         # Draw maze
-        for i in range(tamaño):
-            for j in range(tamaño):
-                rect = pygame.Rect(j*cell_size, i*cell_size, cell_size, cell_size)
-                if laberinto[i, j] == 1:
-                    pygame.draw.rect(screen, BLACK, rect)
+        for i in range(self.size):
+            for j in range(self.size):
+                rect = pygame.Rect(j*self.cell_size, i*self.cell_size, self.cell_size, self.cell_size)
+                if self.maze[i, j] == 1:
+                    pygame.draw.rect(self.screen, self.COLORS['WALL'], rect)
+                    pygame.draw.rect(self.screen, self.COLORS['OUTLINE'], rect, 2)
                 else:
-                    pygame.draw.rect(screen, WHITE, rect, 1)
+                    pygame.draw.rect(self.screen, self.COLORS['PATH'], rect)
+                    pygame.draw.rect(self.screen, self.COLORS['OUTLINE'], rect, 1)
         
-        # Draw robot
-        robot_rect = pygame.Rect(posicion[1]*cell_size, posicion[0]*cell_size, cell_size, cell_size)
-        pygame.draw.rect(screen, RED, robot_rect)
+        # Draw robot as a directional triangle
+        center_x = self.robot_pos[1]*self.cell_size + self.cell_size // 2
+        center_y = self.robot_pos[0]*self.cell_size + self.cell_size // 2
+        triangle_size = self.cell_size * 0.6
+        
+        # Calculate triangle points based on direction
+        if self.robot_dir == "N":
+            points = [
+                (center_x, center_y - triangle_size/2),
+                (center_x - triangle_size/2, center_y + triangle_size/2),
+                (center_x + triangle_size/2, center_y + triangle_size/2)
+            ]
+        elif self.robot_dir == "S":
+            points = [
+                (center_x, center_y + triangle_size/2),
+                (center_x - triangle_size/2, center_y - triangle_size/2),
+                (center_x + triangle_size/2, center_y - triangle_size/2)
+            ]
+        elif self.robot_dir == "E":
+            points = [
+                (center_x + triangle_size/2, center_y),
+                (center_x - triangle_size/2, center_y - triangle_size/2),
+                (center_x - triangle_size/2, center_y + triangle_size/2)
+            ]
+        else:  # W
+            points = [
+                (center_x - triangle_size/2, center_y),
+                (center_x + triangle_size/2, center_y - triangle_size/2),
+                (center_x + triangle_size/2, center_y + triangle_size/2)
+            ]
+        
+        pygame.draw.polygon(self.screen, self.COLORS['ROBOT'], points)
+        pygame.draw.polygon(self.screen, self.COLORS['OUTLINE'], points, 3)
         
         # Draw goal
-        goal_rect = pygame.Rect(objetivo[1]*cell_size, objetivo[0]*cell_size, cell_size, cell_size)
-        pygame.draw.rect(screen, GREEN, goal_rect)
+        goal_rect = pygame.Rect(
+            self.goal[1]*self.cell_size, 
+            self.goal[0]*self.cell_size, 
+            self.cell_size, 
+            self.cell_size
+        )
+        pygame.draw.rect(self.screen, self.COLORS['GOAL'], goal_rect)
+        pygame.draw.rect(self.screen, self.COLORS['OUTLINE'], goal_rect, 3)
         
-        # Draw next step button
-        pygame.draw.rect(screen, BLUE, button_rect)
-        button_text = font.render("Next Step", True, WHITE)
-        screen.blit(button_text, (button_rect.x + 5, button_rect.y + 5))
+        # Draw button
+        pygame.draw.rect(self.screen, self.COLORS['BUTTON'], self.button_rect, border_radius=10)
+        button_text = self.font.render(f"Next Step ({self.steps})", True, self.COLORS['TEXT'])
+        text_rect = button_text.get_rect(center=self.button_rect.center)
+        self.screen.blit(button_text, text_rect)
         
-        # Update display
         pygame.display.flip()
 
-    pygame.quit()
+    def run(self):
+        running = True
+        while running and self.robot_pos != self.goal and self.steps < self.max_steps:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.button_rect.collidepoint(event.pos):
+                        sensors = self.get_sensors()
+                        action_idx = self.model.predict([sensors])[0]
+                        action = ["girar_derecha", "girar_izquierda", "avanzar"][action_idx]
+                        
+                        self.robot_pos, self.robot_dir = self.move_robot(action)
+                        self.steps += 1
+            
+            self.draw()
+        
+        pygame.quit()
 
 # Run the simulation
-simular_laberinto_pygame()
+MazeRobotSimulation().run()
