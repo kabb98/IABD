@@ -13,22 +13,41 @@ import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 
 # --- Entrenamiento del modelo de IA con una tabla de decisiones ajustada ---
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+from sklearn.neural_network import MLPClassifier
+
 def entrenar_modelo_nuevo_sklearn():
-    # Conjunto de datos ajustado para reflejar que siempre avanzamos si no hay obstáculo al frente
+    # Conjunto de datos expandido para cubrir más escenarios de navegación
     inputs = np.array([
-        [0, 0, 0],  # No hay obstáculos
-        [0, 0, 1],  # Obstáculo a la derecha
-        [0, 1, 0],  # Obstáculo a la izquierda
+        # Escenarios básicos de obstáculos
+        [0, 0, 0],  # No hay obstáculos - libre de avanzar
+        [0, 0, 1],  # Obstáculo a la derecha - aún se puede avanzar
+        [0, 1, 0],  # Obstáculo a la izquierda - aún se puede avanzar
+        [1, 0, 0],  # Obstáculo al frente - necesita girar
+        
+        # Escenarios con múltiples obstáculos
+        [1, 1, 0],  # Obstáculo al frente y a la izquierda - girar a la derecha
+        [1, 0, 1],  # Obstáculo al frente y a la derecha - situación compleja
+        [0, 1, 1],  # Obstáculos en los lados izquierdo y derecho - aún puede avanzar
+        [1, 1, 1]   # Completamente bloqueado - necesita estrategia de escape
     ])
 
-    # Salidas ajustadas para reflejar la lógica de avanzar si el frente está libre
+    # Salidas correspondientes a los escenarios de entrada
     outputs = np.array([
-        [0, 0, 1],  # Avanzar si no hay obstáculos
-        [0, 0, 1],  # Avanzar si solo hay obstáculo a la derecha
-        [0, 0, 1],  # Avanzar si solo hay obstáculo a la izquierda
+        [0, 0, 1],  # Avanzar - sin obstáculos
+        [0, 0, 1],  # Avanzar - obstáculo derecho no bloquea
+        [0, 0, 1],  # Avanzar - obstáculo izquierdo no bloquea
+        [1, 0, 0],  # Girar a la derecha - obstáculo al frente
+        
+        [1, 0, 0],  # Girar a la derecha - obstáculos frente e izquierda
+        [0, 1, 0],  # Girar a la izquierda - obstáculos complejos
+        [0, 0, 1],  # Avanzar - obstáculos laterales no bloquean
+        [0, 1, 0]   # Girar a la izquierda - completamente bloqueado
     ])
 
-    model = MLPClassifier(hidden_layer_sizes=(16, 12), activation='relu', max_iter=1, random_state=42)
+    model = MLPClassifier(hidden_layer_sizes=(16, 12), activation='relu', max_iter=500, random_state=42)
     model.fit(inputs, np.argmax(outputs, axis=1))  # Usar el índice de la acción como salida
     return model
 
